@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Straight Lines Lab — DKGraphSuite</title>
+  <link rel="stylesheet" href="./src/styles/tokens.css" />
+</head>
+<body class="bg-dk-bg text-dk-text min-h-screen flex flex-col">
+  <div id="header-container"></div>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 flex flex-col gap-6">
+    <div class="flex flex-wrap justify-between items-center gap-4">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-dk-primary bg-dk-primary/10 px-2.5 py-1 rounded border border-dk-primary/20">Std 11 · Chapter 9</span>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-dk-text mt-1">Straight Lines Interactive Studio</h1>
+      </div>
+      <div id="lang-switch-container" class="flex gap-2"></div>
+    </div>
+
+    <!-- Main Workspace (Desktop: 2 Columns, Canvas + Controls/Explanation) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <!-- Left: Interactive Canvas Viewport (7 Cols) -->
+      <div class="lg:col-span-7 bg-dk-surface border border-dk-border rounded-dk-lg p-4 shadow-dk-sm flex flex-col gap-3">
+        <div class="flex justify-between items-center text-xs font-semibold text-dk-muted">
+          <span>Interactive Coordinate Plane (Drag Points A or B)</span>
+          <span class="text-dk-primary font-mono">Pinch / Scroll to Zoom · Drag to Pan</span>
+        </div>
+        <div id="viewport-container" class="w-full h-[450px] relative"></div>
+      </div>
+
+      <!-- Right: Live Computation & Explanation (5 Cols) -->
+      <div class="lg:col-span-5 flex flex-col gap-5">
+        <!-- Live Calculations Card -->
+        <div class="bg-dk-surface border border-dk-border rounded-dk-lg p-5 shadow-dk-sm flex flex-col gap-3">
+          <h3 class="text-md font-bold text-dk-text border-b border-dk-border pb-2">Calculated Properties</h3>
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div class="bg-dk-bg p-3 rounded-dk border border-dk-border">
+              <span class="text-xs text-dk-muted block">Distance AB</span>
+              <strong id="calc-dist" class="text-base text-dk-primary font-mono">5.6569</strong>
+            </div>
+            <div class="bg-dk-bg p-3 rounded-dk border border-dk-border">
+              <span class="text-xs text-dk-muted block">Slope (m)</span>
+              <strong id="calc-slope" class="text-base text-dk-text font-mono">1.0000</strong>
+            </div>
+            <div class="bg-dk-bg p-3 rounded-dk border border-dk-border">
+              <span class="text-xs text-dk-muted block">Midpoint M</span>
+              <strong id="calc-mid" class="text-base text-dk-text font-mono">(4.0, 5.0)</strong>
+            </div>
+            <div class="bg-dk-bg p-3 rounded-dk border border-dk-border">
+              <span class="text-xs text-dk-muted block">Section Point (1:3)</span>
+              <strong id="calc-sec" class="text-base text-dk-text font-mono">(3.0, 4.0)</strong>
+            </div>
+          </div>
+          <div class="bg-dk-surface-hover p-3 rounded-dk border border-dk-border mt-1">
+            <span class="text-xs text-dk-muted block">Line Equation</span>
+            <strong id="calc-eq" class="text-sm font-mono text-dk-primary">y = x + 1</strong>
+          </div>
+        </div>
+
+        <!-- Live Explanation Panel -->
+        <div id="explanation-container"></div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { createDKHeader } from './src/components/ui/DKHeader.ts';
+    import { GraphViewport } from './src/components/math/GraphViewport.ts';
+    import { MathEngine } from './src/core/MathEngine.ts';
+    import { ExplanationEngine } from './src/core/ExplanationEngine.ts';
+    import { createExplanationPanel } from './src/components/math/ExplanationPanel.ts';
+    import { LanguageEngine } from './src/core/LanguageEngine.ts';
+    import { createDKButton } from './src/components/ui/DKButton.ts';
+
+    document.getElementById('header-container').appendChild(createDKHeader());
+
+    // Language buttons
+    const langContainer = document.getElementById('lang-switch-container');
+    ['en', 'hi', 'gu'].forEach(l => {
+      const btn = createDKButton({
+        label: l === 'en' ? 'EN' : l === 'hi' ? 'हिन्दी' : 'ગુજરાતી',
+        variant: 'outline',
+        size: 'sm',
+        onClick: () => {
+          LanguageEngine.setLanguage(l);
+          updateApp();
+        }
+      });
+      langContainer.appendChild(btn);
+    });
+
+    const viewportContainer = document.getElementById('viewport-container');
+    const viewport = new GraphViewport(viewportContainer);
+
+    let pointA = { x: 2, y: 3 };
+    let pointB = { x: 6, y: 7 };
+
+    viewport.setOnPointDrag((id, x, y) => {
+      if (id === 'ptA') pointA = { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
+      if (id === 'ptB') pointB = { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
+      updateApp();
+    });
+
+    function updateApp() {
+      viewport.clear();
+      viewport.addObject({ id: 'ptA', type: 'point', color: '#3B4BDB', data: { x: pointA.x, y: pointA.y, label: 'A' } });
+      viewport.addObject({ id: 'ptB', type: 'point', color: '#7C3AED', data: { x: pointB.x, y: pointB.y, label: 'B' } });
+      viewport.addObject({ id: 'lineAB', type: 'line', color: '#2563EB', data: { p1: pointA, p2: pointB } });
+
+      const dist = MathEngine.distance2D(pointA, pointB);
+      const slope = MathEngine.slope2D(pointA, pointB);
+      const mid = MathEngine.midpoint2D(pointA, pointB);
+      const sec = MathEngine.sectionFormula2D(pointA, pointB, 1, 3);
+      const lineRes = MathEngine.lineEquationThroughTwoPoints(pointA, pointB);
+
+      document.getElementById('calc-dist').textContent = dist.toFixed(4);
+      document.getElementById('calc-slope').textContent = isFinite(slope) ? slope.toFixed(4) : '∞';
+      document.getElementById('calc-mid').textContent = `(${mid.x.toFixed(1)}, ${mid.y.toFixed(1)})`;
+      document.getElementById('calc-sec').textContent = `(${sec.x.toFixed(1)}, ${sec.y.toFixed(1)})`;
+      document.getElementById('calc-eq').textContent = lineRes.equation;
+
+      const exp = ExplanationEngine.straightLinesDistance(pointA, pointB);
+      const expContainer = document.getElementById('explanation-container');
+      expContainer.innerHTML = '';
+      expContainer.appendChild(createExplanationPanel(exp));
+    }
+
+    updateApp();
+  </script>
+</body>
+</html>

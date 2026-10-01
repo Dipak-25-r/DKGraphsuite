@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Geometry Intro — DKGraphSuite</title>
+  <link rel="stylesheet" href="./src/styles/tokens.css" />
+</head>
+<body class="bg-dk-bg text-dk-text min-h-screen flex flex-col">
+  <div id="header-container"></div>
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 flex flex-col gap-6">
+    <div class="border-b border-dk-border pb-3">
+      <span class="text-xs font-bold uppercase tracking-wider text-dk-primary bg-dk-primary/10 px-2.5 py-1 rounded border border-dk-primary/20">Std 11 · Chapter 11</span>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-dk-text mt-1">Introduction to 3D Geometry</h1>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div class="lg:col-span-7 bg-dk-surface border border-dk-border rounded-dk-lg p-4 shadow-dk-sm flex flex-col gap-3">
+        <div id="viewport3d-container" class="w-full h-[400px] relative rounded-dk overflow-hidden"></div>
+      </div>
+      <div class="lg:col-span-5 bg-dk-surface border border-dk-border rounded-dk-lg p-5 shadow-dk-sm flex flex-col gap-3 text-sm">
+        <h3 class="text-md font-bold text-dk-text border-b border-dk-border pb-2">3D Point P(2, 3, 4)</h3>
+        <div>Distance from origin: <strong class="text-dk-primary font-mono">√29 ≈ 5.3852</strong></div>
+        <p class="text-xs text-dk-muted">Rotate camera with mouse drag to inspect octants and coordinate axes.</p>
+      </div>
+    </div>
+  </main>
+  <script type="module">
+    import { createDKHeader } from './src/components/ui/DKHeader.ts';
+    import { ThreeViewport } from './src/components/math/ThreeViewport.ts';
+    document.getElementById('header-container').appendChild(createDKHeader());
+    const tv = new ThreeViewport(document.getElementById('viewport3d-container'));
+    tv.addPoint3D('p1', 2, 3, 4, 0x3b4bdb);
+  </script>
+</body>
+</html>

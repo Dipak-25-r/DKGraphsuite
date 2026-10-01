@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DKGraphSuite — Digital Mathematics Environment & Textbook</title>
+  <link rel="stylesheet" href="./src/styles/tokens.css" />
+</head>
+<body class="bg-dk-bg text-dk-text min-h-screen flex flex-col">
+  <div id="header-container"></div>
+
+  <main class="flex-1 flex flex-col justify-center items-center text-center px-4 py-16 max-w-5xl mx-auto">
+    <!-- Hero (Z-Pattern Top-Left to Bottom-Right Flow) -->
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-dk-primary/10 text-dk-primary border border-dk-primary/20 text-xs font-semibold mb-6">
+      <span>✨ GSEB Std 11 & 12 Science Mathematics Platform</span>
+    </div>
+
+    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-dk-text leading-tight mb-6">
+      Explore. Construct. Calculate.<br />
+      <span class="text-dk-primary">Understand Mathematics.</span>
+    </h1>
+
+    <p class="text-lg md:text-xl text-dk-muted max-w-2xl leading-relaxed mb-8">
+      A modern, interactive digital mathematics environment and textbook for students, teachers, and self-learners. Engineered with strict mathematical rigor and live reactive visualizations.
+    </p>
+
+    <!-- Z-Pattern Primary CTAs -->
+    <div class="flex flex-wrap gap-4 justify-center mb-16">
+      <a href="std12-application-of-derivatives.html" class="inline-flex items-center justify-center font-bold text-white bg-dk-primary hover:bg-dk-primary-hover px-6 py-3.5 rounded-dk shadow-dk-lg transition-all text-base decoration-none">
+        Open Std 12 Priority Labs →
+      </a>
+      <a href="std11-straight-lines.html" class="inline-flex items-center justify-center font-bold text-dk-text bg-dk-surface border border-dk-border hover:border-dk-primary px-6 py-3.5 rounded-dk shadow-dk-sm transition-all text-base decoration-none">
+        Explore Std 11 Flagship Labs
+      </a>
+    </div>
+
+    <!-- Features Grid (5 Design Principles & 20 Web Design Rules Applied) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left w-full">
+      <div class="bg-dk-surface p-6 rounded-dk-lg border border-dk-border shadow-dk-sm">
+        <div class="text-2xl mb-3">📐</div>
+        <h3 class="text-lg font-bold text-dk-text mb-2">Std 11 Science Suite</h3>
+        <p class="text-sm text-dk-muted leading-relaxed">
+          Straight Lines, Conic Sections, 3D Intro, Limits & Derivatives, Statistics, and Probability interactive labs.
+        </p>
+      </div>
+
+      <div class="bg-dk-surface p-6 rounded-dk-lg border border-dk-border shadow-dk-sm">
+        <div class="text-2xl mb-3">⚡</div>
+        <h3 class="text-lg font-bold text-dk-primary mb-2">Std 12 Priority Chapters (6–12)</h3>
+        <p class="text-sm text-dk-muted leading-relaxed">
+          Textbook-driven learning views for Derivatives, Integrals, Differential Equations, Vectors, 3D Geometry, and Linear Programming.
+        </p>
+      </div>
+
+      <div class="bg-dk-surface p-6 rounded-dk-lg border border-dk-border shadow-dk-sm">
+        <div class="text-2xl mb-3">🌐</div>
+        <h3 class="text-lg font-bold text-dk-text mb-2">Multilingual & Offline</h3>
+        <p class="text-sm text-dk-muted leading-relaxed">
+          Full support for English, हिन्दी (Hindi), and ગુજરાતી (Gujarati) with step-by-step worked explanations and KaTeX formulas.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-dk-border py-6 text-center text-xs text-dk-muted">
+    DKGraphSuite v2.0 · Designed with 20 Web Design Principles & GSEB Science Mathematics Standards
+  </footer>
+
+  <script type="module">
+    import { createDKHeader } from './src/components/ui/DKHeader.ts';
+    import { DKCommandPalette } from './src/components/ui/DKCommandPalette.ts';
+    document.getElementById('header-container').appendChild(createDKHeader());
+    DKCommandPalette.init();
+    DKCommandPalette.registerCommands([
+      { id: 'c1', label: 'Std 11 Straight Lines Lab', category: 'Std 11', action: () => window.location.href = 'std11-straight-lines.html' },
+      { id: 'c2', label: 'Std 12 Applications of Derivatives Lab', category: 'Std 12', action: () => window.location.href = 'std12-application-of-derivatives.html' },
+      { id: 'c3', label: 'Std 12 Integrals Lab', category: 'Std 12', action: () => window.location.href = 'std12-integrals.html' },
+      { id: 'c4', label: 'Std 12 Linear Programming Lab', category: 'Std 12', action: () => window.location.href = 'std12-linear-programming.html' },
+    ]);
+  </script>
+</body>
+</html>

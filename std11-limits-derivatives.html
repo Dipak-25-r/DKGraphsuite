@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Limits & Derivatives — DKGraphSuite</title>
+  <link rel="stylesheet" href="./src/styles/tokens.css" />
+</head>
+<body class="bg-dk-bg text-dk-text min-h-screen flex flex-col">
+  <div id="header-container"></div>
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 flex flex-col gap-6">
+    <div class="border-b border-dk-border pb-3">
+      <span class="text-xs font-bold uppercase tracking-wider text-dk-primary bg-dk-primary/10 px-2.5 py-1 rounded border border-dk-primary/20">Std 11 · Chapter 12</span>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-dk-text mt-1">Limits & Derivatives Secant-Tangent Explorer</h1>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div class="lg:col-span-7 bg-dk-surface border border-dk-border rounded-dk-lg p-4 shadow-dk-sm flex flex-col gap-3">
+        <div id="viewport-container" class="w-full h-[400px] relative"></div>
+      </div>
+      <div class="lg:col-span-5 bg-dk-surface border border-dk-border rounded-dk-lg p-5 shadow-dk-sm flex flex-col gap-3 text-sm">
+        <h3 class="text-md font-bold text-dk-text border-b border-dk-border pb-2">Limit Value</h3>
+        <div>lim_{x→2} (x²-4)/(x-2) = <strong class="text-dk-primary font-mono">4.00</strong></div>
+      </div>
+    </div>
+  </main>
+  <script type="module">
+    import { createDKHeader } from './src/components/ui/DKHeader.ts';
+    import { GraphViewport } from './src/components/math/GraphViewport.ts';
+    import { MathEngine } from './src/core/MathEngine.ts';
+    document.getElementById('header-container').appendChild(createDKHeader());
+    const viewport = new GraphViewport(document.getElementById('viewport-container'));
+    viewport.addObject({ id: 'fCurve', type: 'function', color: '#2563EB', data: { fn: (x) => x*x } });
+  </script>
+</body>
+</html>

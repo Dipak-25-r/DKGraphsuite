@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curriculum — DKGraphSuite</title>
+  <link rel="stylesheet" href="./src/styles/tokens.css" />
+</head>
+<body class="bg-dk-bg text-dk-text min-h-screen flex flex-col">
+  <div id="header-container"></div>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-8 flex flex-col gap-8">
+    <div class="border-b border-dk-border pb-4 flex flex-wrap justify-between items-center gap-4">
+      <div>
+        <h1 class="text-3xl font-extrabold text-dk-text">GSEB Science Mathematics Curriculum</h1>
+        <p class="text-sm text-dk-muted mt-1">Structured syllabus for Standard 11 and Standard 12.</p>
+      </div>
+      <div id="tab-controls" class="flex gap-2"></div>
+    </div>
+
+    <!-- Chapter Grid Container -->
+    <div id="chapter-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </main>
+
+  <script type="module">
+    import { createDKHeader } from './src/components/ui/DKHeader.ts';
+    import { createDKButton } from './src/components/ui/DKButton.ts';
+    import std11Data from './config/curriculum/std11.json';
+    import std12Data from './config/curriculum/std12.json';
+
+    document.getElementById('header-container').appendChild(createDKHeader());
+
+    let currentStd = 12;
+
+    const tabContainer = document.getElementById('tab-controls');
+    const b11 = createDKButton({
+      label: 'Std 11 Syllabus', variant: 'outline', size: 'sm',
+      onClick: () => { currentStd = 11; render(); }
+    });
+    const b12 = createDKButton({
+      label: 'Std 12 Syllabus', variant: 'primary', size: 'sm',
+      onClick: () => { currentStd = 12; render(); }
+    });
+    tabContainer.appendChild(b11);
+    tabContainer.appendChild(b12);
+
+    function render() {
+      const data = currentStd === 11 ? std11Data : std12Data;
+      const container = document.getElementById('chapter-list-container');
+      container.innerHTML = '';
+
+      data.chapters.forEach(ch => {
+        const card = document.createElement('div');
+        card.className = 'bg-dk-surface border border-dk-border rounded-dk-lg p-5 shadow-dk-sm flex flex-col justify-between gap-4';
+        
+        const top = document.createElement('div');
+        top.innerHTML = `<span class="text-xs font-bold text-dk-primary bg-dk-primary/10 px-2 py-0.5 rounded">Chapter ${ch.number}</span><h3 class="text-lg font-bold text-dk-text mt-2">${ch.name.en}</h3><p class="text-xs text-dk-muted mt-1">${ch.description.en}</p>`;
+        
+        const b = document.createElement('a');
+        b.href = ch.interactiveActivities?.[0]?.page || 'dashboard.html';
+        b.className = 'text-xs font-semibold px-3 py-2 rounded-dk bg-dk-surface-hover border border-dk-border text-dk-text hover:border-dk-primary decoration-none text-center block';
+        b.textContent = 'Open Chapter Lab →';
+
+        card.appendChild(top);
+        card.appendChild(b);
+        container.appendChild(card);
+      });
+    }
+
+    render();
+  </script>
+</body>
+</html>

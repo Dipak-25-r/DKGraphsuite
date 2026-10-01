@@ -1,0 +1,39 @@
+{
+  "name": "maths-web-project",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:math": "vitest run tests/math",
+    "test:ui": "vitest run tests/ui",
+    "lint": "tsc --noEmit",
+    "format": "prettier --write .",
+    "check": "npm run lint && npm run test && npm run validate-curriculum && npm run generate-i18n-check",
+    "validate-curriculum": "node scripts/validate-curriculum.js",
+    "generate-i18n-check": "node scripts/generate-i18n-check.js",
+    "audit-dependencies": "node scripts/audit-dependencies.js"
+  },
+  "dependencies": {
+    "dexie": "^4.0.10",
+    "katex": "^0.16.21",
+    "lucide": "^0.477.0",
+    "mathjs": "^14.3.0",
+    "three": "^0.174.0"
+  },
+  "devDependencies": {
+    "@types/katex": "^0.16.7",
+    "@types/node": "^22.13.10",
+    "@types/three": "^0.174.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.3",
+    "prettier": "^3.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0",
+    "vitest": "^3.0.7"
+  }
+}

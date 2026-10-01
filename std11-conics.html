@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conic Sections — DKGraphSuite</title>
+  <link rel="stylesheet" href="./src/styles/tokens.css" />
+</head>
+<body class="bg-dk-bg text-dk-text min-h-screen flex flex-col">
+  <div id="header-container"></div>
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 flex flex-col gap-6">
+    <div class="border-b border-dk-border pb-3">
+      <span class="text-xs font-bold uppercase tracking-wider text-dk-primary bg-dk-primary/10 px-2.5 py-1 rounded border border-dk-primary/20">Std 11 · Chapter 10</span>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-dk-text mt-1">Conic Sections Interactive Lab</h1>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div class="lg:col-span-7 bg-dk-surface border border-dk-border rounded-dk-lg p-4 shadow-dk-sm flex flex-col gap-3">
+        <div id="viewport-container" class="w-full h-[400px] relative"></div>
+        <div id="slider-conic-a"></div>
+      </div>
+      <div class="lg:col-span-5 bg-dk-surface border border-dk-border rounded-dk-lg p-5 shadow-dk-sm flex flex-col gap-3">
+        <h3 class="text-md font-bold text-dk-text border-b border-dk-border pb-2">Conic Properties</h3>
+        <div class="text-sm bg-dk-bg p-3 rounded-dk border border-dk-border font-mono text-dk-primary" id="conic-eq">y² = 4ax</div>
+        <div class="text-xs text-dk-muted" id="conic-details">Focus: (1, 0) | Directrix: x = -1 | Latus Rectum: 4</div>
+      </div>
+    </div>
+  </main>
+  <script type="module">
+    import { createDKHeader } from './src/components/ui/DKHeader.ts';
+    import { GraphViewport } from './src/components/math/GraphViewport.ts';
+    import { createDKSlider } from './src/components/ui/DKSlider.ts';
+    import { MathEngine } from './src/core/MathEngine.ts';
+    document.getElementById('header-container').appendChild(createDKHeader());
+
+    const viewport = new GraphViewport(document.getElementById('viewport-container'));
+    let aVal = 1;
+
+    document.getElementById('slider-conic-a').appendChild(createDKSlider({
+      id: 's-a', label: 'Parabola Parameter (a)', min: 0.5, max: 4, step: 0.5, value: aVal,
+      onChange: (val) => { aVal = val; update(); }
+    }));
+
+    function update() {
+      viewport.clear();
+      viewport.addObject({ id: 'parabolaCurve', type: 'conic', color: '#7C3AED', data: { conicType: 'parabola', a: aVal } });
+      const prop = MathEngine.parabolaProperties(aVal);
+      viewport.addObject({ id: 'focusPt', type: 'point', color: '#DC2626', data: { x: prop.focus.x, y: prop.focus.y, label: 'Focus' } });
+      document.getElementById('conic-eq').textContent = prop.equation;
+      document.getElementById('conic-details').textContent = `Focus: (${prop.focus.x}, 0) | Directrix: ${prop.directrix} | Latus Rectum: ${prop.latusRectum}`;
+    }
+    update();
+  </script>
+</body>
+</html>

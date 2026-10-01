@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — DKGraphSuite</title>
+  <link rel="stylesheet" href="./src/styles/tokens.css" />
+</head>
+<body class="bg-dk-bg text-dk-text min-h-screen flex flex-col">
+  <div id="header-container"></div>
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-8 flex flex-col gap-6">
+    <div class="border-b border-dk-border pb-3">
+      <h1 class="text-3xl font-extrabold text-dk-text">Settings & Customization Center</h1>
+    </div>
+    <div class="bg-dk-surface p-6 rounded-dk border border-dk-border shadow-dk-sm flex flex-col gap-4 text-sm">
+      <h3 class="text-md font-bold text-dk-text">Appearance & Preferences</h3>
+      <div>Theme: <span class="text-dk-primary font-semibold">Light / Dark / High Contrast</span></div>
+      <div>Language: <span class="text-dk-primary font-semibold">English / हिन्दी / ગુજરાતી</span></div>
+    </div>
+  </main>
+  <script type="module">
+    import { createDKHeader } from './src/components/ui/DKHeader.ts';
+    document.getElementById('header-container').appendChild(createDKHeader());
+  </script>
+</body>
+</html>

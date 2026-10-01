@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Statistics Studio — DKGraphSuite</title>
+  <link rel="stylesheet" href="./src/styles/tokens.css" />
+</head>
+<body class="bg-dk-bg text-dk-text min-h-screen flex flex-col">
+  <div id="header-container"></div>
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 flex flex-col gap-6">
+    <div class="border-b border-dk-border pb-3">
+      <span class="text-xs font-bold uppercase tracking-wider text-dk-primary bg-dk-primary/10 px-2.5 py-1 rounded border border-dk-primary/20">Std 11 · Chapter 14</span>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-dk-text mt-1">Statistics & Dispersion Studio</h1>
+    </div>
+    <div class="bg-dk-surface border border-dk-border rounded-dk-lg p-6 shadow-dk-sm flex flex-col gap-4 text-sm">
+      <h3 class="text-md font-bold text-dk-text border-b border-dk-border pb-2">Dataset: 2, 4, 4, 4, 5, 5, 7, 9</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-dk-bg p-3 rounded-dk border border-dk-border">Mean: <strong class="text-dk-primary">5</strong></div>
+        <div class="bg-dk-bg p-3 rounded-dk border border-dk-border">Median: <strong class="text-dk-primary">4.5</strong></div>
+        <div class="bg-dk-bg p-3 rounded-dk border border-dk-border">Mode: <strong class="text-dk-primary">4</strong></div>
+        <div class="bg-dk-bg p-3 rounded-dk border border-dk-border">Standard Dev: <strong class="text-dk-primary">2.00</strong></div>
+      </div>
+    </div>
+  </main>
+  <script type="module">
+    import { createDKHeader } from './src/components/ui/DKHeader.ts';
+    document.getElementById('header-container').appendChild(createDKHeader());
+  </script>
+</body>
+</html>

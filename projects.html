@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects — DKGraphSuite</title>
+  <link rel="stylesheet" href="./src/styles/tokens.css" />
+</head>
+<body class="bg-dk-bg text-dk-text min-h-screen flex flex-col">
+  <div id="header-container"></div>
+
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-8 flex flex-col gap-6">
+    <div class="border-b border-dk-border pb-4 flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-extrabold text-dk-text">My Saved Projects (.dkgs)</h1>
+        <p class="text-sm text-dk-muted mt-1">Manage project snapshots stored in IndexedDB browser storage.</p>
+      </div>
+      <button id="btn-new-proj" class="px-4 py-2 bg-dk-primary text-white font-semibold rounded-dk text-sm hover:bg-dk-primary-hover">
+        + Create New Project
+      </button>
+    </div>
+
+    <div id="projects-list-container" class="flex flex-col gap-3"></div>
+  </main>
+
+  <script type="module">
+    import { createDKHeader } from './src/components/ui/DKHeader.ts';
+    import { ProjectEngine } from './src/core/ProjectEngine.ts';
+
+    document.getElementById('header-container').appendChild(createDKHeader());
+
+    const container = document.getElementById('projects-list-container');
+
+    async function loadList() {
+      container.innerHTML = '';
+      const projects = await ProjectEngine.getAllProjects();
+
+      if (projects.length === 0) {
+        container.innerHTML = '<div class="bg-dk-surface p-8 rounded-dk border border-dk-border text-center text-dk-muted">No saved projects found in IndexedDB storage. Click "+ Create New Project" to save one.</div>';
+        return;
+      }
+
+      projects.forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'bg-dk-surface p-4 rounded-dk border border-dk-border flex items-center justify-between shadow-dk-sm';
+        item.innerHTML = `<div><strong class="text-base text-dk-text">${p.name}</strong><span class="text-xs text-dk-muted block mt-0.5">Updated: ${new Date(p.updatedAt).toLocaleString()} · Version ${p.schemaVersion}</span></div>`;
+        container.appendChild(item);
+      });
+    }
+
+    document.getElementById('btn-new-proj').addEventListener('click', async () => {
+      await ProjectEngine.saveProject({
+        name: `Sample Lab Project ${Date.now().toString().slice(-4)}`,
+        schemaVersion: '2.0.0',
+        updatedAt: new Date().toISOString(),
+        objects: [],
+        settings: {},
+        language: 'en',
+        theme: 'light',
+      });
+      loadList();
+    });
+
+    loadList();
+  </script>
+</body>
+</html>

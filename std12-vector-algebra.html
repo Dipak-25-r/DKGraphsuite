@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vector Algebra 3D Studio — DKGraphSuite</title>
+  <link rel="stylesheet" href="./src/styles/tokens.css" />
+</head>
+<body class="bg-dk-bg text-dk-text min-h-screen flex flex-col">
+  <div id="header-container"></div>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 flex flex-col gap-6">
+    <div class="flex flex-wrap justify-between items-center gap-4">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-dk-primary bg-dk-primary/10 px-2.5 py-1 rounded border border-dk-primary/20">Std 12 Priority · Chapter 10</span>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-dk-text mt-1">3D Vector & Product Visualizer</h1>
+      </div>
+    </div>
+
+    <!-- Main Workspace (2 Columns) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <!-- Left: 3D Viewport (7 Cols) -->
+      <div class="lg:col-span-7 bg-dk-surface border border-dk-border rounded-dk-lg p-4 shadow-dk-sm flex flex-col gap-3">
+        <div class="flex justify-between items-center text-xs font-semibold text-dk-muted">
+          <span>Interactive 3D Viewport (Purple: Vector a, Teal: Vector b)</span>
+          <span class="text-dk-primary font-mono">Orbit: Drag Mouse · Zoom: Scroll Wheel</span>
+        </div>
+        <div id="viewport3d-container" class="w-full h-[450px] relative rounded-dk overflow-hidden"></div>
+      </div>
+
+      <!-- Right: Vector Products & Practice (5 Cols) -->
+      <div class="lg:col-span-5 flex flex-col gap-5">
+        <!-- Calculated Products Card -->
+        <div class="bg-dk-surface border border-dk-border rounded-dk-lg p-5 shadow-dk-sm flex flex-col gap-3">
+          <h3 class="text-md font-bold text-dk-text border-b border-dk-border pb-2">Vector Calculations</h3>
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div class="bg-dk-bg p-3 rounded-dk border border-dk-border">
+              <span class="text-xs text-dk-muted block">Dot Product (a · b)</span>
+              <strong id="val-dot" class="text-lg text-dk-primary font-mono">32.00</strong>
+            </div>
+            <div class="bg-dk-bg p-3 rounded-dk border border-dk-border">
+              <span class="text-xs text-dk-muted block">Angle (θ)</span>
+              <strong id="val-angle" class="text-lg text-dk-text font-mono">12.93°</strong>
+            </div>
+          </div>
+          <div class="bg-dk-surface-hover p-3 rounded-dk border border-dk-border text-xs text-dk-muted flex flex-col gap-1">
+            <div><strong>Cross Product (a × b):</strong> <span id="val-cross" class="font-mono text-dk-primary font-bold">(-3, 6, -3)</span></div>
+            <div><strong>Magnitude |a|:</strong> <span id="val-maga" class="font-mono text-dk-text">3.74</span> | <strong>|b|:</strong> <span id="val-magb" class="font-mono text-dk-text">8.77</span></div>
+          </div>
+        </div>
+
+        <!-- 10-Section Practice Question View -->
+        <div id="practice-container"></div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { createDKHeader } from './src/components/ui/DKHeader.ts';
+    import { ThreeViewport } from './src/components/math/ThreeViewport.ts';
+    import { MathEngine } from './src/core/MathEngine.ts';
+    import { createPracticePanel } from './src/components/math/PracticePanel.ts';
+
+    document.getElementById('header-container').appendChild(createDKHeader());
+
+    const container = document.getElementById('viewport3d-container');
+    const threeView = new ThreeViewport(container);
+
+    const vecA = { x: 1, y: 2, z: 3 };
+    const vecB = { x: 4, y: 5, z: 6 };
+
+    threeView.addVector3D('vA', { x: 0, y: 0, z: 0 }, vecA, 0x7c3aed);
+    threeView.addVector3D('vB', { x: 0, y: 0, z: 0 }, vecB, 0x0d9488);
+
+    const dot = MathEngine.dotProduct3D(vecA, vecB);
+    const cross = MathEngine.crossProduct3D(vecA, vecB);
+    const magA = MathEngine.distance3D(vecA);
+    const magB = MathEngine.distance3D(vecB);
+    const cosTheta = dot / (magA * magB);
+    const angleDeg = (Math.acos(cosTheta) * 180) / Math.PI;
+
+    document.getElementById('val-dot').textContent = dot.toFixed(2);
+    document.getElementById('val-angle').textContent = `${angleDeg.toFixed(2)}°`;
+    document.getElementById('val-cross').textContent = `(${cross.x}, ${cross.y}, ${cross.z})`;
+    document.getElementById('val-maga').textContent = magA.toFixed(2);
+    document.getElementById('val-magb').textContent = magB.toFixed(2);
+
+    const practiceBox = document.getElementById('practice-container');
+    practiceBox.appendChild(createPracticePanel({
+      chapter: 10,
+      exercise: '10.3',
+      questionNumber: 'Q1',
+      importanceCategory: 'Core Concept',
+      questionText: 'Find the scalar (dot) product and angle between vectors a = i + 2j + 3k and b = 4i + 5j + 6k.',
+      whatThisTeaches: 'Calculating dot products and geometric angles between vectors in 3D space.',
+      given: ['a = i + 2j + 3k', 'b = 4i + 5j + 6k'],
+      required: 'Scalar product a · b and angle θ.',
+      formulaLatex: '\\cos \\theta = \\frac{\\vec{a} \\cdot \\vec{b}}{|\\vec{a}||\\vec{b}|}',
+      steps: [
+        'Compute dot product: (1)(4) + (2)(5) + (3)(6) = 4 + 10 + 18 = 32',
+        `Magnitude |a| = \\sqrt{1^2 + 2^2 + 3^2} = \\sqrt{14} \\approx ${magA.toFixed(2)}`,
+        `Magnitude |b| = \\sqrt{4^2 + 5^2 + 6^2} = \\sqrt{77} \\approx ${magB.toFixed(2)}`,
+        `Compute cos θ = \\frac{32}{\\sqrt{14}\\sqrt{77}} \\approx ${cosTheta.toFixed(4)}`,
+        `Angle θ = \\arccos(${cosTheta.toFixed(4)}) \\approx ${angleDeg.toFixed(2)}^\\circ`
+      ],
+      finalAnswerLatex: `\\vec{a} \\cdot \\vec{b} = 32, \\quad \\theta \\approx ${angleDeg.toFixed(2)}^\\circ`,
+      understandIt: 'The dot product measures the extent to which two vectors point in the same direction.'
+    }));
+  </script>
+</body>
+</html>

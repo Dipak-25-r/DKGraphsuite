@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — DKGraphSuite</title>
+  <link rel="stylesheet" href="./src/styles/tokens.css" />
+</head>
+<body class="bg-dk-bg text-dk-text min-h-screen flex flex-col">
+  <div id="header-container"></div>
+
+  <!-- Main Content (F-Pattern Layout for Content-Heavy Dashboard) -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-8 flex flex-col gap-8">
+    <div class="border-b border-dk-border pb-4">
+      <h1 class="text-3xl font-extrabold text-dk-text">Student Learning Hub & Dashboard</h1>
+      <p class="text-sm text-dk-muted mt-1">Select a Standard or Interactive Laboratory to begin your learning session.</p>
+    </div>
+
+    <!-- Quick Access Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Standard 11 Card -->
+      <div class="bg-dk-surface border border-dk-border rounded-dk-lg p-6 shadow-dk-sm flex flex-col justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-dk-accent-blue bg-dk-accent-blue/10 px-2.5 py-1 rounded border border-dk-accent-blue/20">Phase 1</span>
+          <h2 class="text-2xl font-bold text-dk-text mt-2">Std 11 Science Mathematics</h2>
+          <p class="text-sm text-dk-muted mt-2 leading-relaxed">
+            Master Straight Lines, Conic Sections, 3D Intro, Limits & Derivatives, Statistics, and Probability.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-2 pt-4 border-t border-dk-border">
+          <a href="std11-straight-lines.html" class="text-xs font-semibold px-3 py-2 rounded-dk bg-dk-primary text-white hover:bg-dk-primary-hover decoration-none">Straight Lines Lab</a>
+          <a href="curriculum.html" class="text-xs font-semibold px-3 py-2 rounded-dk bg-dk-surface-hover border border-dk-border text-dk-text hover:border-dk-primary decoration-none">View All 16 Chapters</a>
+        </div>
+      </div>
+
+      <!-- Standard 12 Card -->
+      <div class="bg-dk-surface border border-dk-border rounded-dk-lg p-6 shadow-dk-sm flex flex-col justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-dk-primary bg-dk-primary/10 px-2.5 py-1 rounded border border-dk-primary/20">Phase 2 Priority</span>
+          <h2 class="text-2xl font-bold text-dk-text mt-2">Std 12 Priority Textbook Labs</h2>
+          <p class="text-sm text-dk-muted mt-2 leading-relaxed">
+            Chapters 6–12 Textbook-driven learning views: Derivatives, Integrals, Differential Equations, Vectors, 3D, LP.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-2 pt-4 border-t border-dk-border">
+          <a href="std12-application-of-derivatives.html" class="text-xs font-semibold px-3 py-2 rounded-dk bg-dk-primary text-white hover:bg-dk-primary-hover decoration-none">Derivatives Lab</a>
+          <a href="std12-integrals.html" class="text-xs font-semibold px-3 py-2 rounded-dk bg-dk-surface-hover border border-dk-border text-dk-text hover:border-dk-primary decoration-none">Integrals Lab</a>
+          <a href="std12-linear-programming.html" class="text-xs font-semibold px-3 py-2 rounded-dk bg-dk-surface-hover border border-dk-border text-dk-text hover:border-dk-primary decoration-none">LP Lab</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { createDKHeader } from './src/components/ui/DKHeader.ts';
+    import { DKCommandPalette } from './src/components/ui/DKCommandPalette.ts';
+    document.getElementById('header-container').appendChild(createDKHeader());
+    DKCommandPalette.init();
+  </script>
+</body>
+</html>

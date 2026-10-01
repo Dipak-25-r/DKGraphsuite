@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Applications of Derivatives — DKGraphSuite</title>
+  <link rel="stylesheet" href="./src/styles/tokens.css" />
+</head>
+<body class="bg-dk-bg text-dk-text min-h-screen flex flex-col">
+  <div id="header-container"></div>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 flex flex-col gap-6">
+    <div class="flex flex-wrap justify-between items-center gap-4">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-dk-primary bg-dk-primary/10 px-2.5 py-1 rounded border border-dk-primary/20">Std 12 Priority · Chapter 6</span>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-dk-text mt-1">Applications of Derivatives Studio</h1>
+      </div>
+    </div>
+
+    <!-- Main Workspace (2 Columns) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <!-- Left: Graph Viewport + Controls (7 Cols) -->
+      <div class="lg:col-span-7 flex flex-col gap-4">
+        <div class="bg-dk-surface border border-dk-border rounded-dk-lg p-4 shadow-dk-sm flex flex-col gap-3">
+          <div class="flex justify-between items-center text-xs font-semibold text-dk-muted">
+            <span>Function Graph: f(x) = x³ - 3ax (Blue: Curve, Red: Tangent at x_0)</span>
+          </div>
+          <div id="viewport-container" class="w-full h-[400px] relative"></div>
+
+          <!-- Parameter Sliders -->
+          <div id="slider-param-a"></div>
+          <div id="slider-point-x"></div>
+        </div>
+      </div>
+
+      <!-- Right: Live Derivative Analysis & Textbook Practice (5 Cols) -->
+      <div class="lg:col-span-5 flex flex-col gap-5">
+        <!-- Derivative Analysis Card -->
+        <div class="bg-dk-surface border border-dk-border rounded-dk-lg p-5 shadow-dk-sm flex flex-col gap-3">
+          <h3 class="text-md font-bold text-dk-text border-b border-dk-border pb-2">Derivative & Extrema Analysis</h3>
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div class="bg-dk-bg p-3 rounded-dk border border-dk-border">
+              <span class="text-xs text-dk-muted block">f(x_0)</span>
+              <strong id="val-fx" class="text-base text-dk-primary font-mono">-2.00</strong>
+            </div>
+            <div class="bg-dk-bg p-3 rounded-dk border border-dk-border">
+              <span class="text-xs text-dk-muted block">Slope f'(x_0)</span>
+              <strong id="val-dfx" class="text-base text-dk-text font-mono">0.00</strong>
+            </div>
+          </div>
+          <div class="bg-dk-surface-hover p-3 rounded-dk border border-dk-border text-xs text-dk-muted flex flex-col gap-1">
+            <div><strong>Critical Points (f'(x) = 0):</strong> <span id="val-crit" class="font-mono text-dk-primary font-bold">x = ±1.00</span></div>
+            <div><strong>Monotonicity:</strong> <span id="val-mono" class="text-dk-text">Increasing for |x| > √a</span></div>
+          </div>
+        </div>
+
+        <!-- 10-Section Textbook Practice Question View -->
+        <div id="practice-container"></div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { createDKHeader } from './src/components/ui/DKHeader.ts';
+    import { GraphViewport } from './src/components/math/GraphViewport.ts';
+    import { createDKSlider } from './src/components/ui/DKSlider.ts';
+    import { MathEngine } from './src/core/MathEngine.ts';
+    import { createPracticePanel } from './src/components/math/PracticePanel.ts';
+
+    document.getElementById('header-container').appendChild(createDKHeader());
+
+    const viewportContainer = document.getElementById('viewport-container');
+    const viewport = new GraphViewport(viewportContainer);
+
+    let paramA = 1;
+    let pointX = 1;
+
+    // Sliders
+    document.getElementById('slider-param-a').appendChild(createDKSlider({
+      id: 's-a', label: 'Parameter a', min: 0.2, max: 4, step: 0.2, value: paramA,
+      onChange: (val) => { paramA = val; update(); }
+    }));
+
+    document.getElementById('slider-point-x').appendChild(createDKSlider({
+      id: 's-x', label: 'Point of Tangency x_0', min: -3, max: 3, step: 0.1, value: pointX,
+      onChange: (val) => { pointX = val; update(); }
+    }));
+
+    function update() {
+      viewport.clear();
+
+      const fn = (x) => Math.pow(x, 3) - 3 * paramA * x;
+      const dfn = (x) => 3 * x * x - 3 * paramA;
+
+      viewport.addObject({ id: 'fnCurve', type: 'function', color: '#2563EB', data: { fn } });
+
+      // Tangent line at pointX
+      const y0 = fn(pointX);
+      const m = dfn(pointX);
+      const tangentFn = (x) => m * (x - pointX) + y0;
+      viewport.addObject({ id: 'tangentCurve', type: 'function', color: '#DC2626', data: { fn: tangentFn } });
+
+      // Point of Tangency
+      viewport.addObject({ id: 'tangentPt', type: 'point', color: '#DC2626', data: { x: pointX, y: y0, label: 'P' } });
+
+      // Critical Points
+      const critX = Math.sqrt(paramA);
+      viewport.addObject({ id: 'crit1', type: 'point', color: '#16A34A', data: { x: critX, y: fn(critX), label: 'Min' } });
+      viewport.addObject({ id: 'crit2', type: 'point', color: '#CA8A04', data: { x: -critX, y: fn(-critX), label: 'Max' } });
+
+      document.getElementById('val-fx').textContent = y0.toFixed(2);
+      document.getElementById('val-dfx').textContent = m.toFixed(2);
+      document.getElementById('val-crit').textContent = `x = ±${critX.toFixed(2)}`;
+
+      // Update Practice Question View
+      const practiceBox = document.getElementById('practice-container');
+      practiceBox.innerHTML = '';
+      practiceBox.appendChild(createPracticePanel({
+        chapter: 6,
+        exercise: '6.2',
+        questionNumber: 'Q7',
+        importanceCategory: 'Core Concept',
+        questionText: `Find the intervals in which f(x) = x³ - 3ax (for a = ${paramA.toFixed(1)}) is strictly increasing or decreasing.`,
+        whatThisTeaches: 'Determining monotonicity of a cubic function using the sign of its first derivative f\'(x).',
+        given: [`f(x) = x³ - ${ (3*paramA).toFixed(1) }x`],
+        required: 'Intervals of increasing and decreasing behavior.',
+        formulaLatex: `f'(x) = 3x^2 - ${(3*paramA).toFixed(1)} = 0 \\implies x = \\pm \\sqrt{${paramA.toFixed(1)}}`,
+        steps: [
+          `Differentiate f(x): f'(x) = 3x^2 - ${(3*paramA).toFixed(1)}`,
+          `Set f'(x) > 0 for increasing: 3(x - \\sqrt{${paramA.toFixed(1)}})(x + \\sqrt{${paramA.toFixed(1)}}) > 0`,
+          `Intervals of increase: (-\\infty, -${critX.toFixed(2)}) \\cup (${critX.toFixed(2)}, \\infty)`,
+          `Interval of decrease: (-${critX.toFixed(2)}, ${critX.toFixed(2)})`
+        ],
+        finalAnswerLatex: `\\text{Increasing on } (-\\infty, -${critX.toFixed(2)}) \\cup (${critX.toFixed(2)}, \\infty)`,
+        understandIt: 'When f\'(x) > 0, the graph moves upwards from left to right.'
+      }));
+    }
+
+    update();
+  </script>
+</body>
+</html>
